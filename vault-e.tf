@@ -13,7 +13,13 @@ resource "vault_policy" "use" {
 path "kw/secret/data/${var.base_path}/${var.name}/*" {
   capabilities = ["read",]
 }
+path "kw/secret/data/${var.base_path}/${var.name}" {
+  capabilities = ["read",]
+}
 path "kw/secret/metadata/${var.base_path}/${var.name}/*" {
+  capabilities = ["read", "list"]
+}
+path "kw/secret/metadata/${var.base_path}/${var.name}" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -25,14 +31,26 @@ locals {
 
 data "vault_policy_document" "maintainers_policy" {
   rule {
-    description  = "access namespace, stage specific secrets"
+    description  = "manage tree"
     path         = "kw/secret/data/${var.base_path}/${var.name}/*"
     capabilities = ["create", "update", "read", "delete", "list"]
   }
 
   rule {
-    description  = "access namespace, stage specific metadata"
+    description  = "manage secret"
+    path         = "kw/secret/data/${var.base_path}/${var.name}"
+    capabilities = ["create", "update", "read", "delete", "list"]
+  }
+
+  rule {
+    description  = "meta of the tree"
     path         = "kw/secret/metadata/${var.base_path}/${var.name}/*"
+    capabilities = ["create", "update", "read", "delete", "list"]
+  }
+
+  rule {
+    description  = "meta of the secret"
+    path         = "kw/secret/metadata/${var.base_path}/${var.name}"
     capabilities = ["create", "update", "read", "delete", "list"]
   }
 
