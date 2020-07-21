@@ -20,7 +20,7 @@ module "example_namespace" {
     "engineering.platform-seniors"
   ]
 
-  additional_policies = [
+  vault_additional_policies = [
     module.jerry_vault_integration.roles_policies["rw"],
     "kw/secret/platform/security/iam/production/creds-maintainer",
   ]
